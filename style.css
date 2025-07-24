@@ -1,0 +1,367 @@
+/* Pretendard 폰트 사용 */
+
+/* CSS 변수 정의 */
+:root {
+    --vh: 1vh;
+}
+
+body {
+    background-image: url('https://r2.flowith.net/files/o/1753283874501-mining_game_background_gemstone_cave_index_0@1024x1536.png');
+    background-size: cover;
+    background-position: bottom;
+    touch-action: none;
+    /* 모바일 최적화 */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* 스크롤 방지 */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+/* 전체 폰트를 Pretendard로 설정 */
+* {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+.font-pretendard {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+#game-container {
+    border-left: 15px solid #4a2c0f;
+    border-right: 15px solid #4a2c0f;
+    border-bottom: 15px solid #4a2c0f;
+    border-image: linear-gradient(to bottom, #8c5a2b, #4a2c0f) 1;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+    box-sizing: border-box;
+    overflow: hidden;
+    height: calc(100% - 100px);
+}
+
+#game-container canvas {
+    mix-blend-mode: normal;
+}
+
+#drop-zone {
+    cursor: pointer;
+}
+
+.drop-line {
+    position: absolute;
+    top: 80px; /* 게임 설정의 gameOver.lineY와 일치하도록 수정 */
+    left: 5px; /* 가장자리까지 라인이 보이도록 수정 */
+    right: 5px;
+    height: 4px; /* 라인을 더 두껍게 해서 잘 보이도록 수정 */
+    background: repeating-linear-gradient(
+        90deg,
+        #ff0000 0px,
+        #ff0000 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    border: none;
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.8); /* 그림자를 더 강하게 */
+    z-index: 15; /* z-index를 높여서 다른 요소들 위에 표시 */
+    pointer-events: none;
+    opacity: 0.9; /* 약간의 투명도로 가시성 향상 */
+}
+
+/* 스킬 버튼 스타일 */
+.skill-button {
+    min-width: 80px;
+    text-align: center;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+/* 스킬 버튼 텍스트 가독성 개선 */
+.skill-button .text-sm {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff !important;
+}
+
+.skill-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.skill-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* 폭약 설치 모드 커서 */
+.bomb-mode {
+    cursor: crosshair !important;
+}
+
+/* 강화망치 선택 모드 커서 */
+.hammer-mode {
+    cursor: pointer !important;
+}
+
+/* 폭약 시각적 효과 */
+.bomb-explosion {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 100, 0, 0.8) 0%, rgba(255, 200, 0, 0.6) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 15;
+    animation: explode 0.5s ease-out;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* 스킬 컨테이너 위치 조정 - 게임 컨테이너 바로 아래 */
+#skill-container {
+    background: rgba(139, 69, 19, 0.8);
+    backdrop-filter: blur(5px);
+    border-radius: 12px;
+    padding: 8px;
+    margin-bottom: 0;
+    bottom: 10px;
+    transform: translateX(-50%);
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        height: calc(var(--vh, 1vh) * 100);
+    }
+    
+    #game-wrapper {
+        max-width: 100vw;
+        width: 100vw;
+        height: calc(var(--vh, 1vh) * 100);
+        aspect-ratio: unset;
+    }
+    
+    /* 성능 최적화 */
+    * {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+    
+    /* 캔버스 최적화 */
+    canvas {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+    
+    #ui-container {
+        padding: 8px;
+    }
+    
+    #score-box, #next-mineral-box {
+        padding: 8px;
+        border-width: 2px;
+    }
+    
+    #score-box h2, #next-mineral-box h2 {
+        font-size: 0.75rem;
+    }
+    
+    #score {
+        font-size: 1.25rem;
+    }
+    
+    #next-mineral-image-container {
+        width: 32px;
+        height: 32px;
+    }
+    
+    #mineral-guide {
+        top: 80px;
+        right: 8px;
+    }
+    
+    #mineral-guide-toggle {
+        padding: 6px;
+        border-width: 2px;
+    }
+    
+    #mineral-guide-panel {
+        width: 180px;
+        max-height: 280px;
+        padding: 12px;
+    }
+    
+    #skill-container {
+        gap: 12px;
+        padding: 6px;
+        transform: translateX(-50%);
+        bottom: 10px;
+        background: rgba(139, 69, 19, 0.8);
+        border-radius: 12px;
+    }
+    
+    .skill-button {
+        min-width: 80px;
+        padding: 6px 8px;
+        border-width: 2px;
+        white-space: nowrap;
+    }
+    
+    .skill-button .w-6 {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .skill-button .text-sm {
+        font-size: 0.75rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: #ffffff !important;
+    }
+    
+    /* 툴팁 크기 조정 */
+    #bomb-tooltip, #collapse-tooltip, #hammer-tooltip {
+        width: 160px;
+        font-size: 0.625rem;
+        padding: 8px;
+    }
+    
+    /* 도움말 버튼 크기 조정 */
+    #bomb-help, #collapse-help, #hammer-help {
+        width: 16px;
+        height: 16px;
+        font-size: 0.625rem;
+    }
+    
+    /* 게임 오버 모달 */
+    #game-over-modal h2 {
+        font-size: 2.5rem;
+    }
+    
+    #game-over-modal p {
+        font-size: 1rem;
+    }
+    
+    #final-score {
+        font-size: 2.5rem;
+    }
+    
+    #restart-button {
+        padding: 12px 24px;
+        font-size: 1.25rem;
+        border-width: 2px;
+    }
+}
+
+/* 작은 모바일 화면 (iPhone SE 등) */
+@media (max-width: 375px) {
+    #skill-container {
+        gap: 8px;
+        padding: 4px;
+        bottom: 10px;
+        transform: translateX(-50%);
+        background: rgba(139, 69, 19, 0.8);
+        border-radius: 12px;
+    }
+    
+    .skill-button {
+        min-width: 70px;
+        padding: 4px 6px;
+        white-space: nowrap;
+    }
+    
+    .skill-button .w-6 {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .skill-button .text-sm {
+        font-size: 0.625rem;
+    }
+    
+    #ui-container {
+        padding: 4px;
+    }
+    
+    #score-box, #next-mineral-box {
+        padding: 6px;
+    }
+    
+    #mineral-guide {
+        top: 70px;
+        right: 4px;
+    }
+}
+
+/* 터치 최적화 */
+@media (hover: none) and (pointer: coarse) {
+    .skill-button:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .skill-button:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+    
+    #mineral-guide-toggle:hover {
+        background-color: rgba(41, 37, 36, 0.9);
+    }
+    
+    #restart-button:hover {
+        transform: none;
+    }
+    
+    #restart-button:active {
+        transform: scale(0.95);
+    }
+}
+
+/* 가로 모드 최적화 */
+@media (orientation: landscape) and (max-height: 500px) {
+    #game-wrapper {
+        height: 100vh;
+        max-width: 60vh;
+        aspect-ratio: 3/4;
+    }
+    
+    #skill-container {
+        transform: translateX(-50%);
+        bottom: 10px;
+        gap: 8px;
+        padding: 3px;
+        background: rgba(139, 69, 19, 0.8);
+        border: 2px solid #8B4513;
+        border-radius: 12px;
+    }
+    
+    .skill-button {
+        min-width: 60px;
+        padding: 3px 5px;
+        white-space: nowrap;
+    }
+    
+    .skill-button .text-sm {
+        font-size: 0.5rem;
+    }
+}
