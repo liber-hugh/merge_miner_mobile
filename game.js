@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const GAME_CONFIG = {
-        radii: [0.083, 0.105, 0.133, 0.163, 0.195, 0.230, 0.268, 0.308, 0.350, 0.395, 0.45],
+        radii: [0.058, 0.074, 0.093, 0.114, 0.137, 0.161, 0.188, 0.216, 0.245, 0.277, 0.315], // 70%로 축소
         world: { width: 600, height: 1500, gravity: 1.0 }, // 더 사실적인 중력
-        drop: { initialMaxLevel: 3, cooldown: 150 }, // 드롭 레벨 3으로 제한
-        gameOver: { lineY: 80, checkDelay: 500 }
+        drop: { initialMaxLevel: 5, cooldown: 150 }, // 드롭 레벨 5로 확장
+        gameOver: { lineY: 280, checkDelay: 500 } // 광석레벨 버튼 아래로 더 이동
     };
 
     const dom = {
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function setupWorld() {
         const { width, height } = GAME_CONFIG.world;
-        const wallThickness = 10; // 벽 두께를 줄여서 광석이 가장자리까지 닿도록 수정
+        const wallThickness = 25; // 테두리 두께에 맞춰 벽 두께 조정
         World.add(engine.world, [
             Bodies.rectangle(width / 2, height, width, wallThickness, { isStatic: true, render: { visible: false } }), // Floor
             Bodies.rectangle(-wallThickness/2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false } }), // Left wall
@@ -246,7 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateRandomMineral() {
-        return Math.floor(Math.random() * GAME_CONFIG.drop.initialMaxLevel) + 1;
+        const rand = Math.random();
+        
+        // 1-3단계: 70% 확률 (각각 23.33%)
+        if (rand < 0.7) {
+            return Math.floor(rand / 0.7 * 3) + 1;
+        }
+        // 4단계: 20% 확률
+        else if (rand < 0.9) {
+            return 4;
+        }
+        // 5단계: 10% 확률
+        else {
+            return 5;
+        }
     }
 
     function prepareNextMineral() {
@@ -264,8 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const x = (e.clientX - bounds.left) / bounds.width * GAME_CONFIG.world.width;
         
         const radius = GAME_CONFIG.radii[currentMineral.label.split('-')[1] - 1] * GAME_CONFIG.world.width;
-        // 벽 두께를 고려하여 경계 계산 수정 (벽 두께 10을 반영)
-        const wallThickness = 10;
+        // 벽 두께를 고려하여 경계 계산 수정 (벽 두께 25를 반영)
+        const wallThickness = 25;
         const clampedX = Math.max(radius + wallThickness/2, Math.min(x, GAME_CONFIG.world.width - radius - wallThickness/2));
         
         Body.setPosition(currentMineral, { x: clampedX, y: 50 });
